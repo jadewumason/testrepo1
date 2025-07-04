@@ -103,6 +103,28 @@ spec:
               type: boolean
               description: Do you agree to the terms and conditions?
               default: false
+  steps:
+    - id: validate-input
+      name: Validate Input
+      action: custom:validate-input
+      input:
+        username: ${{ parameters.username }}
+        email: ${{ parameters.email }}
+        ipAddress: ${{ parameters.ipAddress }}
+        userType: ${{ parameters.userType }}
+    - id: process-data
+      name: Process Data
+      action: custom:process-data
+      input:
+        preferences: ${{ parameters.preferences }}
+        additionalInfo: ${{ parameters.additionalInfo }}
+    - id: submit-form
+      name: Submit Form
+      action: custom:submit-form
+      input:
+        username: ${{ parameters.username }}
+        email: ${{ parameters.email }}
+        feedback: ${{ parameters.additionalInfo.feedback }}
   output:
     text:
       - title: 'Form submitted successfully'
