@@ -1,0 +1,110 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: dynamic-form-template
+  title: Dynamic Form Template
+  description: A template for creating dynamic forms with various input types.
+  namespace: default
+  tags:
+    - form
+    - dynamic
+spec:
+  owner: YourName
+  type: service
+
+  parameters:
+    - title: User Information
+      description: Provide user information
+      required:
+        - username
+        - email
+        - ipAddress
+        - userType
+      properties:
+        username:
+          title: Username
+          type: string
+          description: Enter your username
+          default: user123
+        email:
+          title: Email
+          type: string
+          description: Enter your email address
+          default: user@example.com
+        ipAddress:
+          title: IP Address
+          type: string
+          description: Enter your IP address
+          pattern: '^((25[0-5]|(2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|(2[0-4][0-9]|[01]?[0-9][0-9]?))|([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::1)$'
+        userType:
+          title: User Type
+          type: string
+          description: Select the type of user
+          enum:
+            - Admin
+            - Editor
+            - Viewer
+          default: Viewer
+        notifications:
+          title: Notifications
+          type: boolean
+          description: Enable notifications
+          default: true
+        preferences:
+          title: Preferences
+          type: object
+          properties:
+            theme:
+              title: Theme
+              type: string
+              enum:
+                - Light
+                - Dark
+              default: Light
+            language:
+              title: Language
+              type: string
+              enum:
+                - English
+                - Spanish
+                - French
+              default: English
+        additionalInfo:
+          title: Additional Information
+          type: object
+          properties:
+            age:
+              title: Age
+              type: integer
+              description: Enter your age
+              minimum: 0
+              default: 25
+            hobbies:
+              title: Hobbies
+              type: array
+              items:
+                type: string
+                enum:
+                  - Reading
+                  - Traveling
+                  - Gaming
+                  - Cooking
+              uniqueItems: true
+              ui:widget: checkboxes
+            feedback:
+              title: Feedback
+              type: string
+              description: Provide your feedback
+              ui:options:
+                rows: 5
+            agreeTerms:
+              title: Agree to Terms
+              type: boolean
+              description: Do you agree to the terms and conditions?
+              default: false
+  output:
+    text:
+      - title: 'Form submitted successfully'
+        content: |
+          Thank you for your submission, `${{ parameters.username }}`!
