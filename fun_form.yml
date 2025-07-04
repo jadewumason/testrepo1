@@ -21,6 +21,7 @@ spec:
         - email
         - ipAddress
         - userType
+        - age
       properties:
         username:
           title: Username
@@ -46,6 +47,21 @@ spec:
             - Editor
             - Viewer
           default: Viewer
+        age:
+          title: Age
+          type: integer
+          description: Enter your age
+          minimum: 0
+          default: 25
+        hobbies:
+          title: Hobbies
+          type: array
+          items:
+            type: string
+            enum:
+              ${{ parameters.age | ageGroupHobbyFilter }}
+            uniqueItems: true
+            ui:widget: checkboxes
         notifications:
           title: Notifications
           type: boolean
@@ -70,39 +86,17 @@ spec:
                 - Spanish
                 - French
               default: English
-        additionalInfo:
-          title: Additional Information
-          type: object
-          properties:
-            age:
-              title: Age
-              type: integer
-              description: Enter your age
-              minimum: 0
-              default: 25
-            hobbies:
-              title: Hobbies
-              type: array
-              items:
-                type: string
-                enum:
-                  - Reading
-                  - Traveling
-                  - Gaming
-                  - Cooking
-              uniqueItems: true
-              ui:widget: checkboxes
-            feedback:
-              title: Feedback
-              type: string
-              description: Provide your feedback
-              ui:options:
-                rows: 5
-            agreeTerms:
-              title: Agree to Terms
-              type: boolean
-              description: Do you agree to the terms and conditions?
-              default: false
+        feedback:
+          title: Feedback
+          type: string
+          description: Provide your feedback
+          ui:options:
+            rows: 5
+        agreeTerms:
+          title: Agree to Terms
+          type: boolean
+          description: Do you agree to the terms and conditions?
+          default: false
   steps:
     - id: validate-input
       name: Validate Input
@@ -112,19 +106,27 @@ spec:
         email: ${{ parameters.email }}
         ipAddress: ${{ parameters.ipAddress }}
         userType: ${{ parameters.userType }}
+        age: ${{ parameters.age }}
+    - id: populate-hobbies
+      name: Populate Hobbies Based on Age
+      action: custom:populate-hobbies
+      input:
+        age: ${{ parameters.age }}
+      output:
+        hobbies: ${{ steps['populate-hobbies'].output.hobbies }}
     - id: process-data
       name: Process Data
       action: custom:process-data
       input:
         preferences: ${{ parameters.preferences }}
-        additionalInfo: ${{ parameters.additionalInfo }}
+        hobbies: ${{ steps['populate-hobbies'].output.hobbies }}
     - id: submit-form
       name: Submit Form
       action: custom:submit-form
       input:
         username: ${{ parameters.username }}
         email: ${{ parameters.email }}
-        feedback: ${{ parameters.additionalInfo.feedback }}
+        feedback: ${{ parameters.feedback }}
   output:
     text:
       - title: 'Form submitted successfully'
