@@ -21,7 +21,7 @@ spec:
         - email
         - ipAddress
         - userType
-        - age
+        - ageRange
       properties:
         username:
           title: Username
@@ -47,19 +47,23 @@ spec:
             - Editor
             - Viewer
           default: Viewer
-        age:
-          title: Age
-          type: integer
-          description: Enter your age
-          minimum: 0
-          default: 25
+        ageRange:
+          title: Age Range
+          type: string
+          description: Select your age range
+          enum:
+            - 20-29
+            - 30-39
+            - 40-49
+            - 50-59
+          default: 20-29
         hobbies:
           title: Hobbies
           type: array
           items:
             type: string
             enum:
-              ${{ parameters.age | ageGroupHobbyFilter }}
+              ${{ parameters.ageRange | ageRangeHobbyFilter }}
             uniqueItems: true
             ui:widget: checkboxes
         notifications:
@@ -106,12 +110,12 @@ spec:
         email: ${{ parameters.email }}
         ipAddress: ${{ parameters.ipAddress }}
         userType: ${{ parameters.userType }}
-        age: ${{ parameters.age }}
+        ageRange: ${{ parameters.ageRange }}
     - id: populate-hobbies
-      name: Populate Hobbies Based on Age
+      name: Populate Hobbies Based on Age Range
       action: custom:populate-hobbies
       input:
-        age: ${{ parameters.age }}
+        ageRange: ${{ parameters.ageRange }}
       output:
         hobbies: ${{ steps['populate-hobbies'].output.hobbies }}
     - id: process-data
