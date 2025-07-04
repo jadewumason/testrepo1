@@ -2,137 +2,101 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 
 metadata:
-  name: dynamic-form-template
-  title: Dynamic Form Template
-  description: A template for creating dynamic forms with various input types.
+  name: os-upgrade
+  title: OS Upgrade Form
+  description: Use this template to upgrade the OS on devices
   namespace: default
   tags:
-    - form
-    - dynamic
+    - os-upgrade
+    - device-management
 spec:
-  owner: YourName
+  owner: ITDepartment
   type: service
 
   parameters:
-    - title: User Information
-      description: Provide user information
+    - title: OS Upgrade Details
+      description: Provide details for the OS upgrade
       required:
-        - username
-        - email
-        - ipAddress
-        - userType
-        - ageRange
+        - changeNumber
+        - userName
+        - numberOfDevices
+        - model
+        - version
       properties:
-        username:
-          title: Username
+        changeNumber:
+          title: Change Number
           type: string
-          description: Enter your username
-          default: user123
-        email:
-          title: Email
+          description: Unique identifier for the change request
+        userName:
+          title: User Name
           type: string
-          description: Enter your email address
-          default: user@example.com
-        ipAddress:
-          title: IP Address
+          description: Name of the user initiating the upgrade
+        numberOfDevices:
+          title: Number of Devices
+          type: integer
+          description: Total number of devices to upgrade
+          minimum: 1
+        model:
+          title: Device Model
           type: string
-          description: Enter your IP address
-          pattern: '^((25[0-5]|(2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|(2[0-4][0-9]|[01]?[0-9][0-9]?))|([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::1)$'
-        userType:
-          title: User Type
-          type: string
-          description: Select the type of user
+          description: Select the model of the devices
           enum:
-            - Admin
-            - Editor
-            - Viewer
-          default: Viewer
-        ageRange:
-          title: Age Range
+            - ModelA
+            - ModelB
+            - ModelC
+          default: ModelA
+        version:
+          title: OS Version
           type: string
-          description: Select your age range
-          enum:
-            - 20-29
-            - 30-39
-            - 40-49
-            - 50-59
-          default: 20-29
-        hobbies:
-          title: Hobbies
-          type: array
-          items:
-            type: string
-            enum:
-              ${{ parameters.ageRange | ageRangeHobbyFilter }}
-            uniqueItems: true
-            ui:widget: checkboxes
-        notifications:
-          title: Notifications
-          type: boolean
-          description: Enable notifications
-          default: true
-        preferences:
-          title: Preferences
-          type: object
-          properties:
-            theme:
-              title: Theme
-              type: string
-              enum:
-                - Light
-                - Dark
-              default: Light
-            language:
-              title: Language
-              type: string
-              enum:
-                - English
-                - Spanish
-                - French
-              default: English
-        feedback:
-          title: Feedback
-          type: string
-          description: Provide your feedback
-          ui:options:
-            rows: 5
-        agreeTerms:
-          title: Agree to Terms
-          type: boolean
-          description: Do you agree to the terms and conditions?
-          default: false
+          description: Select the OS version based on the device model
+          ui:conditional:
+            - if: { model: ModelA }
+              then:
+                enum:
+                  - v1.0
+                  - v1.1
+                  - v1.2
+            - if: { model: ModelB }
+              then:
+                enum:
+                  - v2.0
+                  - v2.1
+                  - v2.2
+            - if: { model: ModelC }
+              then:
+                enum:
+                  - v3.0
+                  - v3.1
+                  - v3.2
+          default: v1.0
   steps:
     - id: validate-input
       name: Validate Input
       action: custom:validate-input
       input:
-        username: ${{ parameters.username }}
-        email: ${{ parameters.email }}
-        ipAddress: ${{ parameters.ipAddress }}
-        userType: ${{ parameters.userType }}
-        ageRange: ${{ parameters.ageRange }}
-    - id: populate-hobbies
-      name: Populate Hobbies Based on Age Range
-      action: custom:populate-hobbies
+        changeNumber: ${{ parameters.changeNumber }}
+        userName: ${{ parameters.userName }}
+        numberOfDevices: ${{ parameters.numberOfDevices }}
+        model: ${{ parameters.model }}
+        version: ${{ parameters.version }}
+    - id: initiate-upgrade
+      name: Initiate OS Upgrade
+      action: custom:initiate-upgrade
       input:
-        ageRange: ${{ parameters.ageRange }}
-      output:
-        hobbies: ${{ steps['populate-hobbies'].output.hobbies }}
-    - id: process-data
-      name: Process Data
-      action: custom:process-data
-      input:
-        preferences: ${{ parameters.preferences }}
-        hobbies: ${{ steps['populate-hobbies'].output.hobbies }}
-    - id: submit-form
-      name: Submit Form
-      action: custom:submit-form
-      input:
-        username: ${{ parameters.username }}
-        email: ${{ parameters.email }}
-        feedback: ${{ parameters.feedback }}
+        changeNumber: ${{ parameters.changeNumber }}
+        userName: ${{ parameters.userName }}
+        numberOfDevices: ${{ parameters.numberOfDevices }}
+        model: ${{ parameters.model }}
+        version: ${{ parameters.version }}
   output:
     text:
-      - title: 'Form submitted successfully'
+      - title: 'OS Upgrade Completed Successfully'
         content: |
-          Thank you for your submission, `${{ parameters.username }}`!
+          **Change Number:** `${{ steps['validate-input'].output.changeNumber }}`
+          **User Name:** `${{ steps['validate-input'].output.userName }}`
+          **Number of Devices:** `${{ steps['validate-input'].output.numberOfDevices }}`
+          **Model:** `${{ steps['validate-input'].output.model }}`
+          **Version:** `${{ steps['validate-input'].output.version }}`
+    links:
+      - title: View Upgrade Details
+        url: ${{ steps['initiate-upgrade'].output.detailsUrl }}
