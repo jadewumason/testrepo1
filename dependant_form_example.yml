@@ -1,0 +1,127 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: os-upgrade
+  title: OS Upgrade Form
+  description: Use this template to upgrade the OS on devices
+  namespace: default
+  tags:
+    - os-upgrade
+    - device-management
+spec:
+  owner: ITDepartment
+  type: service
+
+  parameters:
+    - title: OS Upgrade Details
+      description: Provide details for the OS upgrade
+      ui:order:
+        - changeNumber
+        - userName
+        - numberOfDevices
+        - model
+        - version      
+      required:
+        - changeNumber
+        - userName
+        - numberOfDevices
+        - model
+        - version
+      properties:
+        changeNumber:
+          title: Change Number
+          type: string
+          description: Unique identifier for the change request
+        userName:
+          title: User Name
+          type: string
+          description: Name of the user initiating the upgrade
+        numberOfDevices:
+          title: Number of Devices
+          type: integer
+          description: Total number of devices to upgrade
+          minimum: 1
+        model:
+          title: Device Model
+          type: string
+          description: Select the model of the devices
+          enum:
+            - ModelA
+            - ModelB
+            - ModelC
+          default: ModelA
+        version:
+          title: OS Version
+          type: string
+          description: Select the OS version based on the device model
+      dependencies:
+        model:
+          allOf:
+            - if:
+              properties:
+                model:
+                  const: ModelA
+              then:
+                properties:
+                  version:
+                    enum:
+                      - v1.0
+                      - v1.1
+                      - v1.2
+                    default: v1.0
+            - if:
+              properties:
+                model:
+                  const: ModelB
+              then:
+                properties:
+                  version:
+                    enum:
+                      - v2.0
+                      - v2.1
+                      - v2.2
+                    default: v2.0
+            - if:
+              properties:
+                model:
+                  const: ModelC
+              then:
+                properties:
+                  version:
+                    enum:
+                      - v3.0
+                      - v3.1
+                      - v3.2
+                    default: v3.0                    
+  steps:
+    - id: validate-input
+      name: Validate Input
+      action: custom:validate-input
+      input:
+        changeNumber: ${{ parameters.changeNumber }}
+        userName: ${{ parameters.userName }}
+        numberOfDevices: ${{ parameters.numberOfDevices }}
+        model: ${{ parameters.model }}
+        version: ${{ parameters.version }}
+    - id: initiate-upgrade
+      name: Initiate OS Upgrade
+      action: custom:initiate-upgrade
+      input:
+        changeNumber: ${{ parameters.changeNumber }}
+        userName: ${{ parameters.userName }}
+        numberOfDevices: ${{ parameters.numberOfDevices }}
+        model: ${{ parameters.model }}
+        version: ${{ parameters.version }}
+  output:
+    text:
+      - title: 'OS Upgrade Completed Successfully'
+        content: |
+          **Change Number:** `${{ steps['validate-input'].output.changeNumber }}`
+          **User Name:** `${{ steps['validate-input'].output.userName }}`
+          **Number of Devices:** `${{ steps['validate-input'].output.numberOfDevices }}`
+          **Model:** `${{ steps['validate-input'].output.model }}`
+          **Version:** `${{ steps['validate-input'].output.version }}`
+    links:
+      - title: View Upgrade Details
+        url: ${{ steps['initiate-upgrade'].output.detailsUrl }}
