@@ -48,6 +48,11 @@ spec:
           type: string
           description: Input a valid IPv4 address
           format: ipv4
+        interface:
+          title: Interfce Name
+          type: string
+          description: Enter the interface name
+          pattern: (TenGigabitEthernet|GigabitEthernet|Port-Channel|ethernet|Ethernet|Tunnel|Null|Vlan|Serial|Bundle-Ether)\d+[/]?[\d+]?[/]?[\d+]?[\.]?[\d+]?[/]?[\d+]?[/]?[\d+]?[:]?[\d+]?$
         model:
           title: Device Model
           description: Select the model of the devices
