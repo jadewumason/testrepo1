@@ -51,10 +51,10 @@ spec:
             - ModelB
             - ModelC
           default: ModelA
-        version:
-          title: OS Version
-          type: string
-          description: Select the OS version based on the device model
+#        version:
+#          title: OS Version
+#          type: string
+#          description: Select the OS version based on the device model
       dependencies:
         model:
           allOf:
