@@ -1,0 +1,85 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: vacation-planning
+  title: Plan Your Vacation
+  description: Use this template to plan your dream vacation
+  namespace: default
+  tags:
+    - travel
+    - fun
+spec:
+  owner: TravelAgency
+  type: service
+
+  parameters:
+    - title: Vacation Details
+      description: Provide details for your vacation
+      required:
+        - token
+        - destination
+        - travelDates
+        - activities
+      properties:
+        token:
+          title: Token
+          type: string
+          description: Authentication token for booking
+        destination:
+          title: Destination
+          type: string
+          description: Select your vacation destination
+          enum:
+            - Hawaii
+            - Paris
+            - Tokyo
+            - New York
+            - Sydney
+          default: Hawaii
+        travelDates:
+          title: Travel Dates
+          type: string
+          description: Provide your travel dates
+          ui:options:
+            rows: 2
+        activities:
+          title: Activities
+          type: array
+          items:
+            type: string
+            enum:
+              - Sightseeing
+              - Beach
+              - Adventure Sports
+              - Shopping
+              - Food Tasting
+          uniqueItems: true
+          ui:widget: checkboxes
+  steps:
+    - id: validate-plan
+      name: Validate Vacation Plan
+      action: custom:validate-plan
+      input:
+        token: ${{ parameters.token }}
+        destination: ${{ parameters.destination }}
+        travelDates: ${{ parameters.travelDates }}
+        activities: ${{ parameters.activities }}
+    - id: book-vacation
+      name: Book Vacation
+      action: custom:book-vacation
+      input:
+        token: ${{ parameters.token }}
+        destination: ${{ parameters.destination }}
+        travelDates: ${{ parameters.travelDates }}
+        activities: ${{ parameters.activities }}
+  output:
+    text:
+      - title: 'Vacation Booked Successfully'
+        content: |
+          **Destination:** `${{ parameters.destination }}`
+          **Travel Dates:** `${{ parameters.travelDates }}`
+          **Activities:** `${{ parameters.activities }}`
+    links:
+      - title: View Your Itinerary
+        url: ${{ steps['book-vacation'].output.itineraryUrl }}
