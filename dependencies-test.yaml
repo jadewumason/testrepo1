@@ -45,11 +45,11 @@ spec:
                         java_version:
                           enum:
                             - java8
-                       any other option:
-                          type: "string"
-                          enum:
-                            - option1
-                            - java build x.y.z
+                     any other option:
+                        type: "string"
+                        enum:
+                          - option1
+                          - java build x.y.z
               required: 
                 - java version
 steps:
