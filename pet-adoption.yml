@@ -1,0 +1,76 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: pet-adoption
+  title: Adopt a Pet
+  description: Use this template to adopt a pet
+  namespace: default
+  tags:
+    - pets
+    - fun
+spec:
+  owner: AnimalShelter
+  type: service
+
+  parameters:
+    - title: Adoption Details
+      description: Provide details for adopting a pet
+      required:
+        - token
+        - petType
+        - petName
+        - adoptionReason
+      properties:
+        token:
+          title: Token
+          type: string
+          description: Authentication token for adoption
+        petType:
+          title: Pet Type
+          type: string
+          description: Select the type of pet you want to adopt
+          enum:
+            - Dog
+            - Cat
+            - Rabbit
+            - Bird
+            - Fish
+          default: Dog
+        petName:
+          title: Pet Name
+          type: string
+          description: Provide a name for your pet
+        adoptionReason:
+          title: Reason for Adoption
+          type: string
+          description: Provide a reason for adopting a pet
+          ui:options:
+            rows: 5
+  steps:
+    - id: validate-adoption
+      name: Validate Adoption Request
+      action: custom:validate-adoption
+      input:
+        token: ${{ parameters.token }}
+        petType: ${{ parameters.petType }}
+        petName: ${{ parameters.petName }}
+        adoptionReason: ${{ parameters.adoptionReason }}
+    - id: finalize-adoption
+      name: Finalize Adoption
+      action: custom:finalize-adoption
+      input:
+        token: ${{ parameters.token }}
+        petType: ${{ parameters.petType }}
+        petName: ${{ parameters.petName }}
+        adoptionReason: ${{ parameters.adoptionReason }}
+  output:
+    text:
+      - title: 'Pet Adoption Completed Successfully'
+        content: |
+          **Pet Type:** `${{ parameters.petType }}`
+          **Pet Name:** `${{ parameters.petName }}`
+          **Reason:** `${{ parameters.adoptionReason }}`
+    links:
+      - title: View Adoption Certificate
+        url: ${{ steps['finalize-adoption'].output.certificateUrl }}
