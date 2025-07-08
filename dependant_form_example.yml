@@ -11,6 +11,7 @@ metadata:
     - device-management
 spec:
   owner: ITDepartment
+  type: service
   parameters:
     - title: OS Upgrade Details
       description: Provide details for the OS upgrade
