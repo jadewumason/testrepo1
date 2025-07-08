@@ -53,3 +53,34 @@ spec:
                             - java build x.y.z
               required: 
                 - java version
+steps:
+    - id: validate-input
+      name: Validate Input
+      action: custom:validate-input
+      input:
+        changeNumber: ${{ parameters.changeNumber }}
+        userName: ${{ parameters.userName }}
+        numberOfDevices: ${{ parameters.numberOfDevices }}
+        model: ${{ parameters.model }}
+        version: ${{ parameters.version }}
+    - id: initiate-upgrade
+      name: Initiate OS Upgrade
+      action: custom:initiate-upgrade
+      input:
+        changeNumber: ${{ parameters.changeNumber }}
+        userName: ${{ parameters.userName }}
+        numberOfDevices: ${{ parameters.numberOfDevices }}
+        model: ${{ parameters.model }}
+        version: ${{ parameters.version }}
+  output:
+    text:
+      - title: 'OS Upgrade Completed Successfully'
+        content: |
+          **Change Number:** `${{ steps['validate-input'].output.changeNumber }}`
+          **User Name:** `${{ steps['validate-input'].output.userName }}`
+          **Number of Devices:** `${{ steps['validate-input'].output.numberOfDevices }}`
+          **Model:** `${{ steps['validate-input'].output.model }}`
+          **Version:** `${{ steps['validate-input'].output.version }}`
+    links:
+      - title: View Upgrade Details
+        url: ${{ steps['initiate-upgrade'].output.detailsUrl }}
