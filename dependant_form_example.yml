@@ -55,49 +55,20 @@ spec:
 #          title: OS Version
 #          type: string
 #          description: Select the OS version based on the device model
-      allOf:
-        - if:
+      - if:
+        properties:
+          model:
+            const: ModelA
+        then:
           properties:
-            model:
-              const: ModelA
-          then:
-            properties:
-              version:
-                enum:
-                  - v1.0
-                  - v1.1
-                  - v1.2
-                default: v1.0
-            required:
-              - version
-        - if:
-          properties:
-            model:
-              const: ModelB
-          then:
-            properties:
-              version:
-                enum:
-                  - v2.0
-                  - v2.1
-                  - v2.2
-                default: v2.0
-            required:
-              - version
-        - if:
-          properties:
-            model:
-              const: ModelC
-          then:
-            properties:
-              version:
-                enum:
-                  - v3.0
-                  - v3.1
-                  - v3.2
-                default: v3.0
-            required:
-              - version
+            version:
+              enum:
+                - v1.0
+                - v1.1
+                - v1.2
+              default: v1.0
+          required:
+            - version
   steps:
     - id: validate-input
       name: Validate Input
