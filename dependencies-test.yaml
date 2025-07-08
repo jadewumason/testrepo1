@@ -52,13 +52,13 @@ spec:
                            - java build x.y.z
               required: 
                 - java version
-steps:
-    - id: validate-input
-      name: Validate Input
-      action: custom:validate-input
-      input:
-        java_version: ${{ parameters.java_version }}
-output:
-  text:
-    - title: 'OS Upgrade Completed Successfully'
-      content: |
+  steps:
+      - id: validate-input
+        name: Validate Input
+        action: custom:validate-input
+        input:
+          java_version: ${{ parameters.java_version }}
+  output:
+    text:
+      - title: 'OS Upgrade Completed Successfully'
+        content: |
