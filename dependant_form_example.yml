@@ -55,7 +55,7 @@ spec:
 #          title: OS Version
 #          type: string
 #          description: Select the OS version based on the device model
-      - if:
+      if:
         properties:
           model:
             const: ModelA
