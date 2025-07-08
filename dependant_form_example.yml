@@ -52,7 +52,7 @@ spec:
           title: Interfce Name
           type: string
           description: Enter the interface name
-          pattern: (TenGigabitEthernet|GigabitEthernet|Port-Channel|ethernet|Ethernet|Tunnel|Null|Vlan|Serial|Bundle-Ether)\d+[/]?[\d+]?[/]?[\d+]?[\.]?[\d+]?[/]?[\d+]?[/]?[\d+]?[:]?[\d+]?$
+          pattern: TenGigabitEthernet[^\\s]*|GigabitEthernet[^\\s]*|Loopback[^\\s]*|[Ee]thernet[^\\s]*|\\d+
         model:
           title: Device Model
           description: Select the model of the devices
