@@ -1,0 +1,70 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: application-deployment
+  title: Application Deployment
+  description: Use this template to deploy applications
+  namespace: default
+  tags:
+    - deployment
+    - application
+spec:
+  owner: DevOpsTeam
+  type: service
+
+  parameters:
+    - title: Deployment Details
+      description: Provide details for the application deployment
+      required:
+        - token
+        - appName
+        - environment
+        - version
+      properties:
+        token:
+          title: Token
+          type: string
+          description: Authentication token
+        appName:
+          title: Application Name
+          type: string
+          description: Name of the application to deploy
+        environment:
+          title: Environment
+          type: string
+          description: Select the environment for deployment
+          enum:
+            - Development
+            - Staging
+            - Production
+          default: Development
+        version:
+          title: Application Version
+          type: string
+          description: Specify the version of the application
+          default: "1.0.0"
+  steps:
+    - id: validate-input
+      name: Validate Input
+      action: custom:validate-input
+      input:
+        token: ${{ parameters.token }}
+        appName: ${{ parameters.appName }}
+        environment: ${{ parameters.environment }}
+        version: ${{ parameters.version }}
+    - id: deploy-application
+      name: Deploy Application
+      action: custom:deploy-application
+      input:
+        token: ${{ parameters.token }}
+        appName: ${{ parameters.appName }}
+        environment: ${{ parameters.environment }}
+        version: ${{ parameters.version }}
+  output:
+    text:
+      - title: 'Application Deployed Successfully'
+        content: |
+          **Application Name:** `${{ parameters.appName }}`
+          **Environment:** `${{ parameters.environment }}`
+          **Version:** `${{ parameters.version }}`
