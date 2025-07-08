@@ -20,7 +20,6 @@ spec:
           type: string
           enum:
             - java
-            # - dotnet
             - javascript
             - python
 
@@ -32,55 +31,34 @@ spec:
                 technology:
                   enum:
                     - java
-                java version:
+                java_version:
                   type: "string"
                   enum:
                     - java8
                     - java11
 
               # Creating a dependency based on the selected java version (not necessary, just for example)
-#              dependencies:
-#                java version:
-#                  oneOf:
-#                    - properties: 
-#                        java version:
-#                          enum:
-#                            - java8
-#                       any other option:
-#                          type: "string"
-#                          enum:
-#                            - option1
-#                            - java build x.y.z
-#              required: 
-#                - java version
+              dependencies:
+                java_version:
+                  oneOf:
+                    - properties: 
+                        java_version:
+                          enum:
+                            - java8
+                       any other option:
+                          type: "string"
+                          enum:
+                            - option1
+                            - java build x.y.z
+              required: 
+                - java version
 steps:
     - id: validate-input
       name: Validate Input
       action: custom:validate-input
       input:
-        changeNumber: ${{ parameters.changeNumber }}
-        userName: ${{ parameters.userName }}
-        numberOfDevices: ${{ parameters.numberOfDevices }}
-        model: ${{ parameters.model }}
-        version: ${{ parameters.version }}
-    - id: initiate-upgrade
-      name: Initiate OS Upgrade
-      action: custom:initiate-upgrade
-      input:
-        changeNumber: ${{ parameters.changeNumber }}
-        userName: ${{ parameters.userName }}
-        numberOfDevices: ${{ parameters.numberOfDevices }}
-        model: ${{ parameters.model }}
-        version: ${{ parameters.version }}
+        java_version: ${{ parameters.java_version }}
 output:
   text:
     - title: 'OS Upgrade Completed Successfully'
       content: |
-        **Change Number:** `${{ steps['validate-input'].output.changeNumber }}`
-        **User Name:** `${{ steps['validate-input'].output.userName }}`
-        **Number of Devices:** `${{ steps['validate-input'].output.numberOfDevices }}`
-        **Model:** `${{ steps['validate-input'].output.model }}`
-        **Version:** `${{ steps['validate-input'].output.version }}`
-  links:
-    - title: View Upgrade Details
-      url: ${{ steps['initiate-upgrade'].output.detailsUrl }}
