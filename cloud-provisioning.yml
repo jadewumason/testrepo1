@@ -1,0 +1,79 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: cloud-provisioning
+  title: Cloud Resource Provisioning
+  description: Use this template to provision cloud resources
+  namespace: default
+  tags:
+    - cloud
+    - provisioning
+spec:
+  owner: CloudTeam
+  type: service
+
+  parameters:
+    - title: Resource Details
+      description: Provide details for the cloud resource provisioning
+      required:
+        - token
+        - resourceType
+        - region
+        - instanceSize
+      properties:
+        token:
+          title: Token
+          type: string
+          description: Authentication token
+        resourceType:
+          title: Resource Type
+          type: string
+          description: Select the type of resource to provision
+          enum:
+            - VM
+            - Database
+            - Storage
+          default: VM
+        region:
+          title: Region
+          type: string
+          description: Select the region for the resource
+          enum:
+            - US-East
+            - US-West
+            - EU-Central
+          default: US-East
+        instanceSize:
+          title: Instance Size
+          type: string
+          description: Select the size of the instance
+          enum:
+            - Small
+            - Medium
+            - Large
+          default: Medium
+  steps:
+    - id: validate-input
+      name: Validate Input
+      action: custom:validate-input
+      input:
+        token: ${{ parameters.token }}
+        resourceType: ${{ parameters.resourceType }}
+        region: ${{ parameters.region }}
+        instanceSize: ${{ parameters.instanceSize }}
+    - id: provision-resource
+      name: Provision Resource
+      action: custom:provision-resource
+      input:
+        token: ${{ parameters.token }}
+        resourceType: ${{ parameters.resourceType }}
+        region: ${{ parameters.region }}
+        instanceSize: ${{ parameters.instanceSize }}
+  output:
+    text:
+      - title: 'Cloud Resource Provisioned Successfully'
+        content: |
+          **Resource Type:** `${{ parameters.resourceType }}`
+          **Region:** `${{ parameters.region }}`
+          **Instance Size:** `${{ parameters.instanceSize }}`
