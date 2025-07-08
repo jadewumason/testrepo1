@@ -19,12 +19,14 @@ spec:
         - changeNumber
         - userName
         - numberOfDevices
+        - ipaddress
         - model
         - version      
       required:
         - changeNumber
         - userName
         - numberOfDevices
+        - ipaddress
         - model
       type: object
       properties:
@@ -41,6 +43,11 @@ spec:
           type: integer
           description: Total number of devices to upgrade
           minimum: 1
+        ipaddress:
+          title: IP Address
+          type: string
+          description: Input a valid IPv4 address
+          format: ipv4
         model:
           title: Device Model
           description: Select the model of the devices
