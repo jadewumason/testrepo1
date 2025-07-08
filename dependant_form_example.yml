@@ -27,7 +27,6 @@ spec:
         - userName
         - numberOfDevices
         - model
-        - version
       properties:
         changeNumber:
           title: Change Number
