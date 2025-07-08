@@ -1,0 +1,70 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: database-backup
+  title: Database Backup
+  description: Use this template to schedule database backups
+  namespace: default
+  tags:
+    - database
+    - backup
+spec:
+  owner: DBA
+  type: service
+
+  parameters:
+    - title: Backup Details
+      description: Provide details for the database backup
+      required:
+        - token
+        - databaseName
+        - backupType
+        - schedule
+      properties:
+        token:
+          title: Token
+          type: string
+          description: Authentication token
+        databaseName:
+          title: Database Name
+          type: string
+          description: Name of the database to back up
+        backupType:
+          title: Backup Type
+          type: string
+          description: Select the type of backup
+          enum:
+            - Full
+            - Incremental
+            - Differential
+          default: Full
+        schedule:
+          title: Backup Schedule
+          type: string
+          description: Cron expression for scheduling the backup
+          default: "0 2 * * *"
+  steps:
+    - id: validate-input
+      name: Validate Input
+      action: custom:validate-input
+      input:
+        token: ${{ parameters.token }}
+        databaseName: ${{ parameters.databaseName }}
+        backupType: ${{ parameters.backupType }}
+        schedule: ${{ parameters.schedule }}
+    - id: schedule-backup
+      name: Schedule Backup
+      action: custom:schedule-backup
+      input:
+        token: ${{ parameters.token }}
+        databaseName: ${{ parameters.databaseName }}
+        backupType: ${{ parameters.backupType }}
+        schedule: ${{ parameters.schedule }}
+  output:
+    text:
+      - title: 'Database Backup Scheduled Successfully'
+        content: |
+          **Database Name:** `${{ parameters.databaseName }}`
+          **Backup Type:** `${{ parameters.backupType }}`
+          **Schedule:** `${{ parameters.schedule }}`
