@@ -1,0 +1,55 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: dependant-test
+  title: TEST Dependancies
+  description: Testing Scaffolds
+  namespace: default
+  tags:
+    - os-upgrade
+    - device-management
+spec:
+  owner: ITDepartment
+  type: service
+  parameters:
+    - title: Creating a API
+      required: []
+      properties:
+        technology:
+          type: string
+          enum:
+            - java
+            # - dotnet
+            - javascript
+            - python
+
+      # Creating a dependency based on the selected technology above
+      dependencies:
+        technology:
+          oneOf:
+            - properties:
+                technology:
+                  enum:
+                    - java
+                java version:
+                  type: "string"
+                  enum:
+                    - java8
+                    - java11
+
+              # Creating a dependency based on the selected java version (not necessary, just for example)
+              dependencies:
+                java version:
+                  oneOf:
+                    - properties: 
+                        java version:
+                          enum:
+                            - java8
+                        any other option:
+                          type: "string"
+                          enum:
+                            - option1
+                            - java build x.y.z
+              required: 
+                - java version
