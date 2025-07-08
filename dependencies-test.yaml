@@ -39,20 +39,20 @@ spec:
                     - java11
 
               # Creating a dependency based on the selected java version (not necessary, just for example)
-              dependencies:
-                java version:
-                  oneOf:
-                    - properties: 
-                        java version:
-                          enum:
-                            - java8
-                        any other option:
-                          type: "string"
-                          enum:
-                            - option1
-                            - java build x.y.z
-              required: 
-                - java version
+#              dependencies:
+#                java version:
+#                  oneOf:
+#                    - properties: 
+#                        java version:
+#                          enum:
+#                            - java8
+#                       any other option:
+#                          type: "string"
+#                          enum:
+#                            - option1
+#                            - java build x.y.z
+#              required: 
+#                - java version
 steps:
     - id: validate-input
       name: Validate Input
