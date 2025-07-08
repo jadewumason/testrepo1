@@ -70,6 +70,8 @@ spec:
                       - v1.1
                       - v1.2
                     default: v1.0
+                required:
+                  - version
             - if:
               properties:
                 model:
@@ -82,6 +84,8 @@ spec:
                       - v2.1
                       - v2.2
                     default: v2.0
+                required:
+                  - version
             - if:
               properties:
                 model:
@@ -93,7 +97,9 @@ spec:
                       - v3.0
                       - v3.1
                       - v3.2
-                    default: v3.0                    
+                    default: v3.0
+                required:
+                  - version
   steps:
     - id: validate-input
       name: Validate Input
