@@ -129,10 +129,11 @@ spec:
           title: Stack Configuration
           type: string
           description: Select the stack configuration
-          radio:
+          enum:
             - Single
             - Stack of 2
             - Stack of 4
+          ui:widget: radio
     - title: Email Notification
       description: Provide details for the email notification
       ui:order:
