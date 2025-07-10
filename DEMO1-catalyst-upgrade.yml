@@ -7,6 +7,8 @@ metadata:
   description: Use this template to upgrade the Catalyst devices
   namespace: default
   tags:
+    - nwas
+    - delivery
     - catalyst-upgrade
     - device-management
 spec:
