@@ -27,6 +27,14 @@ spec:
         - vlanNumbers
       type: object
       properties:
+        token:
+          title: Token
+          type: string
+          description: Oauth2 token
+          ui:field: AAPTokenField
+          ui:backstage:
+            review:
+              show: false
         switchName:
           title: Switch Name
           type: string
@@ -44,28 +52,110 @@ spec:
             minimum: 1
             maximum: 4094
 
+  # steps:
+  #   - id: validate-vlan-input
+  #     name: Validate VLAN Input
+  #     action: custom:validate-vlan-input
+  #     input:
+  #       switchName: ${{ parameters.switchName }}
+  #       interfaceName: ${{ parameters.interfaceName }}
+  #       vlanNumbers: ${{ parameters.vlanNumbers }}
+  #   - id: change-vlan
+  #     name: Change VLAN
+  #     action: custom:change-vlan
+  #     input:
+  #       switchName: ${{ parameters.switchName }}
+  #       interfaceName: ${{ parameters.interfaceName }}
+  #       vlanNumbers: ${{ parameters.vlanNumbers }}
+  # output:
+  #   text:
+  #     - title: 'VLAN Change Completed Successfully'
+  #       content: |
+  #         **Switch Name:** `${{ steps['validate-vlan-input'].output.switchName }}`
+  #         **Interface Name:** `${{ steps['validate-vlan-input'].output.interfaceName }}`
+  #         **VLAN Numbers:** `${{ steps['validate-vlan-input'].output.vlanNumbers }}`
+  #   links:
+  #     - title: View Change Details
+  #       url: ${{ steps['change-vlan'].output.detailsUrl }}
   steps:
-    - id: validate-vlan-input
-      name: Validate VLAN Input
-      action: custom:validate-vlan-input
-      input:
-        switchName: ${{ parameters.switchName }}
-        interfaceName: ${{ parameters.interfaceName }}
-        vlanNumbers: ${{ parameters.vlanNumbers }}
-    - id: change-vlan
-      name: Change VLAN
-      action: custom:change-vlan
-      input:
-        switchName: ${{ parameters.switchName }}
-        interfaceName: ${{ parameters.interfaceName }}
-        vlanNumbers: ${{ parameters.vlanNumbers }}
+    #  - id: create-project
+    #    name: Create project
+    #    action: rhaap:create-project
+    #    input:
+    #      token: ${{ parameters.token }}
+    #      deleteIfExist: true
+    #      values:
+    #         projectName: 'Self Service Job Template Project'
+    #         projectDescription: 'Self Service Job Template Project'
+    #         organization: ${{ parameters.organization }}
+    #         scmUrl: ${{ parameters.scmUrl }}
+    #         scmBranch: ${{ parameters.scmBranch }}
+    #         scmUpdateOnLaunch: true
+    #         credentials: ${{ parameters.credentials }}
+    #  - id: create-ee
+    #    name: Create execution environment
+    #    action: rhaap:create-execution-environment
+    #    input:
+    #      token: ${{ parameters.token }}
+    #      deleteIfExist: true
+    #      values:
+    #        environmentName: 'Self Service Job Template execution environment'
+    #        organization: ${{ parameters.organization }}
+    #        image: 'quay.io/portal_mvp_patterns/ansible-pattern-loader:latest'
+    #        pull: always
+    #  - id: create-template
+    #    name: Create job template
+    #    action: rhaap:create-job-template
+    #    input:
+    #      token: ${{ parameters.token }}
+    #      deleteIfExist: true
+    #      values:
+    #        templateName: 'Self Service Job Template'
+    #        templateDescription: 'Self Service Job Template'
+    #        scmType: ${{ parameters.scmType }}
+    #        project: ${{steps['create-project'].output.project }}
+    #        organization: ${{ parameters.organization }}
+    #        jobInventory: ${{ parameters.jobInventory }}
+    #        playbook: ${{ parameters.playbook }}
+    #        executionEnvironment: ${{steps['create-ee'].output.executionEnvironment }}
+    #        credentials: ${{ parameters.credentials }}
+    #        extraVariables:
+    #          aap_hostname: ${{ parameters.aapHostName }}
+    #          aap_token: ${{ parameters.token }}
+    #          usecases: ${{ parameters.useCases }}
+    #          seed_usecase: ${{ parameters.useCases | useCaseNameFilter }}
+    #          organization: ${{ parameters.organization | resourceFilter('name')}}
+    #          credential: ${{ parameters.credentials | resourceFilter('name')}}
+     - id: launch-job
+       name: Launch job template
+       action: rhaap:launch-job-template
+       input:
+         token: ${{ parameters.token }}
+         values:
+           template: 'NWAS Job Template'
+    #  - id: clean-up
+    #    name: Clean up
+    #    action: rhaap:clean-up
+    #    input:
+    #      token: ${{ parameters.token }}
+    #      values:
+    #        project: ${{steps['create-project'].output.project }}
+    #        executionEnvironment: ${{steps['create-ee'].output.executionEnvironment }}
+    #        template: ${{steps['create-template'].output.template }}
+    #  - id: create-showcase
+    #    name: Create showcases
+    #    action: rhaap:create-show-cases
+    #    input:
+    #      token: ${{ parameters.token }}
+    #      values:
+    #        organization: Default
+    #        scmType: Github
+    #        useCases: ${{ parameters.useCases }}
   output:
     text:
-      - title: 'VLAN Change Completed Successfully'
+      - title: 'Job generic seed template executed successfully'
         content: |
-          **Switch Name:** `${{ steps['validate-vlan-input'].output.switchName }}`
-          **Interface Name:** `${{ steps['validate-vlan-input'].output.interfaceName }}`
-          **VLAN Numbers:** `${{ steps['validate-vlan-input'].output.vlanNumbers }}`
+          **Job ID:** `${{ steps['launch-job'].output.data.id }}`
     links:
-      - title: View Change Details
-        url: ${{ steps['change-vlan'].output.detailsUrl }}
+      - title: View in RH AAP
+        url: ${{ steps['launch-job'].output.data.url }}
