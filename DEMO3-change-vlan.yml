@@ -1,0 +1,71 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: change-vlan
+  title: NWAS Change VLAN Form
+  description: Use this template to change VLANs on a switch interface
+  namespace: default
+  tags:
+    - nwas-operations
+    - vlan-change
+    - device-management
+
+spec:
+  owner: NWAS Automation
+  type: change
+  parameters:
+    - title: VLAN Change Details
+      description: Provide details for the VLAN change
+      ui:order:
+        - switchName
+        - interfaceName
+        - vlanNumbers
+      required:
+        - switchName
+        - interfaceName
+        - vlanNumbers
+      type: object
+      properties:
+        switchName:
+          title: Switch Name
+          type: string
+          description: Enter the switch name
+        interfaceName:
+          title: Interface Name
+          type: string
+          description: Enter the interface name (e.g., GigabitEthernet1/0/1)
+        vlanNumbers:
+          title: VLAN Numbers
+          type: array
+          description: List of VLAN numbers to assign
+          items:
+            type: integer
+            minimum: 1
+            maximum: 4094
+
+  steps:
+    - id: validate-vlan-input
+      name: Validate VLAN Input
+      action: custom:validate-vlan-input
+      input:
+        switchName: ${{ parameters.switchName }}
+        interfaceName: ${{ parameters.interfaceName }}
+        vlanNumbers: ${{ parameters.vlanNumbers }}
+    - id: change-vlan
+      name: Change VLAN
+      action: custom:change-vlan
+      input:
+        switchName: ${{ parameters.switchName }}
+        interfaceName: ${{ parameters.interfaceName }}
+        vlanNumbers: ${{ parameters.vlanNumbers }}
+  output:
+    text:
+      - title: 'VLAN Change Completed Successfully'
+        content: |
+          **Switch Name:** `${{ steps['validate-vlan-input'].output.switchName }}`
+          **Interface Name:** `${{ steps['validate-vlan-input'].output.interfaceName }}`
+          **VLAN Numbers:** `${{ steps['validate-vlan-input'].output.vlanNumbers }}`
+    links:
+      - title: View Change Details
+        url: ${{ steps['change-vlan'].output.detailsUrl }}
