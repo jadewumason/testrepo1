@@ -43,7 +43,15 @@ spec:
             - Arista
             - Aruba
             - Cisco
-
+        businessUnit:
+          title: Business Unit
+          type: string
+          description: Select the business unit for the switch
+          enum:
+            - Retail
+            - TDI
+            - AMCB
+            - TDS
         interface:
           title: Source Interfce Name
           type: string
@@ -87,10 +95,6 @@ spec:
                 enum:
                   - 7050X3
                   - 7280R3
-                  - 2930F
-                  - 3810M
-                  - C9200
-                  - C9300
             required:
               - modelNumber
         - if:
@@ -104,8 +108,8 @@ spec:
                 type: string
                 description: Select the model number based on the switch type
                 enum:
-                  - 6300
-                  - 6410
+                  - 'Aruba CX 6300M 48 SR PoE Switch (JL659A)'
+                  - 'Aruba CX 6405 48SFP+ 8SFP56 (R0X24C)'
             required:
               - modelNumber
         - if:
