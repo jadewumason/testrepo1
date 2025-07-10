@@ -46,13 +46,13 @@ spec:
           type: string
           description: Select the model of the devices
           enum:
-            - 9200
-            - 9300
-            - 9410
-            - 9500
-            - 4510
-            - ISR
-            - ASR
+            - '9200'
+            - '9300'
+            - '9410'
+            - '9500'
+            - '4510'
+            - 'ISR'
+            - 'ASR'
         emailResult:
           title: Email Result
           type: boolean
