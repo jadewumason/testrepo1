@@ -68,7 +68,7 @@ spec:
         - if:
             properties:
               model:
-                enum: [9200, 9300, 9410, 9500, 4510]
+                enum: ['9200', '9300', '9410', '9500', '4510']
           then:
             properties:
               version:
@@ -83,7 +83,7 @@ spec:
         - if:
             properties:
               model:
-                enum: [ISR, ASR]
+                enum: ['ISR', 'ASR']
           then:
             properties:
               version:
