@@ -55,7 +55,6 @@ spec:
             - '4510'
             - 'ISR'
             - 'ASR'
-          default: '9200'
         version:
           title: OS Version
           type: string
