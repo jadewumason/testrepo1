@@ -80,7 +80,22 @@ spec:
                 default: 17.09.05
             required:
               - version
-
+        - if:
+            properties:
+              model:
+                enum: [ISR, ASR]
+          then:
+            properties:
+              version:
+                title: OS Version
+                type: string
+                description: Select the OS version based on the device model                
+                enum:
+                  - 16.04.05
+                  - 17.09.05a
+                default: 17.09.05a
+            required:
+              - version
   steps:
     - id: validate-input
       name: Validate Input
