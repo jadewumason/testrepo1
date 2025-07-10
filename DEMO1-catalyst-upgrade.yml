@@ -55,10 +55,7 @@ spec:
             - '4510'
             - 'ISR'
             - 'ASR'
-        emailResult:
-          title: Email Result
-          type: boolean
-          description: Send the result of the upgrade via email
+
       allOf:
         - if:
             properties:
@@ -91,19 +88,7 @@ spec:
                 default: 17.09.05a
             required:
               - version
-        - if:
-            properties:
-              emailResult:
-                const: true
-          then:
-            properties:
-              emailRecipients:
-                title: Email Recipients
-                type: array
-                description: List of email addresses to receive the upgrade results
-                items:
-                  type: string
-                  format: email
+
     - title: Email Notification
       description: Provide details for the email notification
       ui:order:
