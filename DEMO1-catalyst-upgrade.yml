@@ -3,7 +3,7 @@ kind: Template
 
 metadata:
   name: catalyst-upgrade
-  title: Catalyst Upgrade Form
+  title: NWAS Catalyst Upgrade Form
   description: Use this template to upgrade the Catalyst devices
   namespace: default
   tags:
