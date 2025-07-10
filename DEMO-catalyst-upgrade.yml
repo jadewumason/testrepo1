@@ -1,0 +1,108 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: catalyst-upgrade
+  title: Catalyst Upgrade Form
+  description: Use this template to upgrade the Catalyst devices
+  namespace: default
+  tags:
+    - catalyst-upgrade
+    - device-management
+spec:
+  owner: ITDepartment
+  type: service
+  parameters:
+    - title: Catalyst Upgrade Details
+      description: Provide details for the Catalyst upgrade
+      ui:order:
+        - changeNumber
+        - numberOfDevices
+        - model
+        - version
+        - emailResult
+        - emailRecipients
+      required:
+        - changeNumber
+        - numberOfDevices
+        - model
+      type: object
+      properties:
+        changeNumber:
+          title: Change Number
+          type: string
+          description: Unique identifier for the change request (must be 10 characters long and start with "CHG")
+          pattern: ^CHG.{7}$
+          minLength: 10
+          maxLength: 10
+        numberOfDevices:
+          title: Number of Devices
+          type: integer
+          description: Total number of devices to upgrade (must be between 1 and 500)
+          minimum: 1
+          maximum: 500
+        model:
+          title: Device Model
+          type: string
+          description: Select the model of the devices
+          enum:
+            - 9200
+            - 9300
+            - 9410
+        version:
+          title: OS Version
+          type: string
+          description: Select the OS version based on the device model
+          enum:
+            - v1.0
+            - v1.1
+            - v1.2
+            - v2.0
+            - v2.1
+            - v2.2
+            - v3.0
+            - v3.1
+            - v3.2
+        emailResult:
+          title: Email Result
+          type: boolean
+          description: Send the result of the upgrade via email
+        emailRecipients:
+          title: Email Recipients
+          type: array
+          description: List of email addresses to receive the upgrade results
+          items:
+            type: string
+            format: email
+  steps:
+    - id: validate-input
+      name: Validate Input
+      action: custom:validate-input
+      input:
+        changeNumber: ${{ parameters.changeNumber }}
+        numberOfDevices: ${{ parameters.numberOfDevices }}
+        model: ${{ parameters.model }}
+        version: ${{ parameters.version }}
+        emailResult: ${{ parameters.emailResult }}
+        emailRecipients: ${{ parameters.emailRecipients }}
+    - id: initiate-upgrade
+      name: Initiate Catalyst Upgrade
+      action: custom:initiate-upgrade
+      input:
+        changeNumber: ${{ parameters.changeNumber }}
+        numberOfDevices: ${{ parameters.numberOfDevices }}
+        model: ${{ parameters.model }}
+        version: ${{ parameters.version }}
+        emailResult: ${{ parameters.emailResult }}
+        emailRecipients: ${{ parameters.emailRecipients }}
+  output:
+    text:
+      - title: 'Catalyst Upgrade Completed Successfully'
+        content: |
+          **Change Number:** `${{ steps['validate-input'].output.changeNumber }}`
+          **Number of Devices:** `${{ steps['validate-input'].output.numberOfDevices }}`
+          **Model:** `${{ steps['validate-input'].output.model }}`
+          **Version:** `${{ steps['validate-input'].output.version }}`
+    links:
+      - title: View Upgrade Details
+        url: ${{ steps['initiate-upgrade'].output.detailsUrl }}
