@@ -21,7 +21,6 @@ spec:
       ui:order:
         - switchType
         - modelNumber
-        - stackConfiguration
         - interface
         - ipAddress
         - defaultGateway
@@ -29,7 +28,6 @@ spec:
       required:
         - switchType
         - modelNumber
-        - stackConfiguration
         - ipAddress
         - defaultGateway
         - vlanNumber
