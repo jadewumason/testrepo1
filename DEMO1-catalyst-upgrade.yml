@@ -12,8 +12,8 @@ metadata:
     - catalyst-upgrade
     - device-management
 spec:
-  owner: ITDepartment
-  type: service
+  owner: NWAS Automation
+  type: upgrade
   parameters:
     - title: Catalyst Upgrade Details
       description: Provide details for the Catalyst upgrade
