@@ -132,7 +132,9 @@ spec:
        input:
          token: ${{ parameters.token }}
          values:
-           template: 'NWAS Job Template'
+           template: 
+             id: 20
+             name: 'NWAS Job Template'
     #  - id: clean-up
     #    name: Clean up
     #    action: rhaap:clean-up
