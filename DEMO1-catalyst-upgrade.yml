@@ -97,13 +97,14 @@ spec:
               emailResult:
                 const: true
           then:
-            emailRecipients:
-              title: Email Recipients
-              type: array
-              description: List of email addresses to receive the upgrade results
-              items:
-                type: string
-                format: email
+            properties:
+              emailRecipients:
+                title: Email Recipients
+                type: array
+                description: List of email addresses to receive the upgrade results
+                items:
+                  type: string
+                  format: email
   steps:
     - id: validate-input
       name: Validate Input
