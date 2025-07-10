@@ -22,8 +22,6 @@ spec:
         - numberOfDevices
         - model
         - version
-        - emailResult
-        - emailRecipients
       required:
         - changeNumber
         - numberOfDevices
@@ -55,7 +53,6 @@ spec:
             - '4510'
             - 'ISR'
             - 'ASR'
-
       allOf:
         - if:
             properties:
@@ -102,8 +99,7 @@ spec:
           title: Email Result
           type: boolean
           description: Send the result of the upgrade via email
-      allOf:
-        
+      allOf:        
         - if:
             properties:
               emailResult:
