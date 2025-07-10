@@ -57,14 +57,6 @@ spec:
           type: string
           description: Enter the interface name
           pattern: TenGigabitEthernet[^\\s]*|GigabitEthernet[^\\s]*|Loopback[^\\s]*|[Ee]thernet[^\\s]*|\\d+
-        stackConfiguration:
-          title: Stack Configuration
-          type: string
-          description: Select the stack configuration
-          enum:
-            - Single
-            - Stack of 2
-            - Stack of 4
         ipAddress:
           title: IP Address
           type: string
@@ -127,6 +119,22 @@ spec:
                   - C9300
             required:
               - modelNumber
+    - title: Stack Configuration
+      description: Select the stack configuration for the switch
+      ui:order:
+        - stackConfiguration
+      required:
+        - stackConfiguration
+      type: object
+      properties:
+        stackConfiguration:
+          title: Stack Configuration
+          type: string
+          description: Select the stack configuration
+          radio:
+            - Single
+            - Stack of 2
+            - Stack of 4
     - title: Email Notification
       description: Provide details for the email notification
       ui:order:
