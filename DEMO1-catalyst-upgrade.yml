@@ -55,11 +55,17 @@ spec:
             - '4510'
             - 'ISR'
             - 'ASR'
+          default: '9200'
+        version:
+          title: OS Version
+          type: string
+          description: Select the OS version based on the device model
+          enum: []
+          default: ''
         emailResult:
           title: Email Result
           type: boolean
           description: Send the result of the upgrade via email
-
       allOf:
         - if:
             properties:
