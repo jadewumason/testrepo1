@@ -1,0 +1,184 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: switch-build
+  title: NWAS Switch Build Form
+  description: Use this template to build and configure NWAS switches
+  namespace: default
+  tags:
+    - nwas-delivery
+    - nwas-operations
+    - switch-build
+    - device-management
+
+spec:
+  owner: NWAS Automation
+  type: build
+  parameters:
+    - title: Switch Build Details
+      description: Provide details for the switch build
+      ui:order:
+        - switchType
+        - modelNumber
+        - stackConfiguration
+        - interface
+        - ipAddress
+        - defaultGateway
+        - vlanNumber
+      required:
+        - switchType
+        - modelNumber
+        - stackConfiguration
+        - ipAddress
+        - defaultGateway
+        - vlanNumber
+      type: object
+      properties:
+        switchType:
+          title: Switch Type
+          type: string
+          description: Select the type of switch
+          enum:
+            - Arista
+            - Aruba
+            - Cisco
+
+        interface:
+          title: Source Interfce Name
+          type: string
+          description: Enter the interface name
+          pattern: TenGigabitEthernet[^\\s]*|GigabitEthernet[^\\s]*|Loopback[^\\s]*|[Ee]thernet[^\\s]*|\\d+
+        stackConfiguration:
+          title: Stack Configuration
+          type: string
+          description: Select the stack configuration
+          enum:
+            - Single
+            - Stack of 2
+            - Stack of 4
+        ipAddress:
+          title: IP Address
+          type: string
+          description: Management IP address for the switch
+          format: ipv4
+        defaultGateway:
+          title: Default Gateway
+          type: string
+          description: Default gateway for the switch
+          format: ipv4
+        vlanNumber:
+          title: VLAN Number
+          type: integer
+          description: VLAN number for the management interface
+          minimum: 1
+          maximum: 4094
+      allOf:
+        - if:
+            properties:
+              switchType:
+                enum: ['Arista']
+          then:
+            properties:
+              modelNumber:
+                title: Model Number
+                type: string
+                description: Select the model number based on the switch type
+                enum:
+                  - 7050X3
+                  - 7280R3
+                  - 2930F
+                  - 3810M
+                  - C9200
+                  - C9300
+            required:
+              - modelNumber
+        - if:
+            properties:
+              switchType:
+                enum: ['Aruba']
+          then:
+            properties:
+              modelNumber:
+                title: Model Number
+                type: string
+                description: Select the model number based on the switch type
+                enum:
+                  - 6300
+                  - 6410
+            required:
+              - modelNumber
+        - if:
+            properties:
+              switchType:
+                enum: ['Cisco']
+          then:
+            properties:
+              modelNumber:
+                title: Model Number
+                type: string
+                description: Select the model number based on the switch type
+                enum:
+                  - C9200
+                  - C9300
+            required:
+              - modelNumber
+    - title: Email Notification
+      description: Provide details for the email notification
+      ui:order:
+        - emailResult
+        - emailRecipients
+      required:
+        - emailResult
+      type: object
+      properties:
+        emailResult:
+          title: Email Result
+          type: boolean
+          description: Send the result of the switch build via email
+        emailRecipients:
+          title: Email Recipients
+          type: array
+          description: List of email addresses to receive the build results
+          items:
+            type: string
+            format: email
+
+  steps:
+    - id: validate-input
+      name: Validate Input
+      action: custom:validate-input
+      input:
+        switchType: ${{ parameters.switchType }}
+        modelNumber: ${{ parameters.modelNumber }}
+        stackConfiguration: ${{ parameters.stackConfiguration }}
+        ipAddress: ${{ parameters.ipAddress }}
+        defaultGateway: ${{ parameters.defaultGateway }}
+        vlanNumber: ${{ parameters.vlanNumber }}
+        emailResult: ${{ parameters.emailResult }}
+        emailRecipients: ${{ parameters.emailRecipients }}
+    - id: initiate-build
+      name: Initiate Switch Build
+      action: custom:initiate-build
+      input:
+        switchType: ${{ parameters.switchType }}
+        modelNumber: ${{ parameters.modelNumber }}
+        stackConfiguration: ${{ parameters.stackConfiguration }}
+        ipAddress: ${{ parameters.ipAddress }}
+        defaultGateway: ${{ parameters.defaultGateway }}
+        vlanNumber: ${{ parameters.vlanNumber }}
+        emailResult: ${{ parameters.emailResult }}
+        emailRecipients: ${{ parameters.emailRecipients }}
+  output:
+    text:
+      - title: 'Switch Build Completed Successfully'
+        content: |
+          **Switch Type:** `${{ steps['validate-input'].output.switchType }}`
+          **Model Number:** `${{ steps['validate-input'].output.modelNumber }}`
+          **Stack Configuration:** `${{ steps['validate-input'].output.stackConfiguration }}`
+          **IP Address:** `${{ steps['validate-input'].output.ipAddress }}`
+          **Default Gateway:** `${{ steps['validate-input'].output.defaultGateway }}`
+          **VLAN Number:** `${{ steps['validate-input'].output.vlanNumber }}`
+    links:
+      - title: View Build Details
+        url: ${{ steps['initiate-build'].output.detailsUrl }}
