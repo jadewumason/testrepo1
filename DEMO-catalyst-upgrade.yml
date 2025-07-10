@@ -68,7 +68,7 @@ spec:
         - if:
             properties:
               model:
-                const: 9200
+                enum: [9200, 9300, 9410, 9500, 4510]
           then:
             properties:
               version:
@@ -76,10 +76,8 @@ spec:
                 type: string
                 description: Select the OS version based on the device model                
                 enum:
-                  - v1.0
-                  - v1.1
-                  - v1.2
-                default: v1.0
+                  - 17.09.05
+                default: 17.09.05
             required:
               - version
 
