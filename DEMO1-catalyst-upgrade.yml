@@ -121,26 +121,35 @@ spec:
       #             type: string
       #             format: email                  
   steps:
-    - id: validate-input
-      name: Validate Input
-      action: custom:validate-input
+    - id: launch-job
+      name: Launch job template
+      action: rhaap:launch-job-template
       input:
-        changeNumber: ${{ parameters.changeNumber }}
-        numberOfDevices: ${{ parameters.numberOfDevices }}
-        model: ${{ parameters.model }}
-        version: ${{ parameters.version }}
-        emailResult: ${{ parameters.emailResult }}
-        emailRecipients: ${{ parameters.emailRecipients }}
-    - id: initiate-upgrade
-      name: Initiate Catalyst Upgrade
-      action: custom:initiate-upgrade
-      input:
-        changeNumber: ${{ parameters.changeNumber }}
-        numberOfDevices: ${{ parameters.numberOfDevices }}
-        model: ${{ parameters.model }}
-        version: ${{ parameters.version }}
-        emailResult: ${{ parameters.emailResult }}
-        emailRecipients: ${{ parameters.emailRecipients }}
+        token: ${{ parameters.token }}
+        values:
+          template: 
+            id: 20
+            name: 'NWAS Job Template'
+    # - id: validate-input
+    #   name: Validate Input
+    #   action: custom:validate-input
+    #   input:
+    #     changeNumber: ${{ parameters.changeNumber }}
+    #     numberOfDevices: ${{ parameters.numberOfDevices }}
+    #     model: ${{ parameters.model }}
+    #     version: ${{ parameters.version }}
+    #     emailResult: ${{ parameters.emailResult }}
+    #     emailRecipients: ${{ parameters.emailRecipients }}
+    # - id: initiate-upgrade
+    #   name: Initiate Catalyst Upgrade
+    #   action: custom:initiate-upgrade
+    #   input:
+    #     changeNumber: ${{ parameters.changeNumber }}
+    #     numberOfDevices: ${{ parameters.numberOfDevices }}
+    #     model: ${{ parameters.model }}
+    #     version: ${{ parameters.version }}
+    #     emailResult: ${{ parameters.emailResult }}
+    #     emailRecipients: ${{ parameters.emailRecipients }}
   output:
     text:
       - title: 'Catalyst Upgrade Completed Successfully'

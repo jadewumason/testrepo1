@@ -156,30 +156,39 @@ spec:
             format: email
 
   steps:
-    - id: validate-input
-      name: Validate Input
-      action: custom:validate-input
+    - id: launch-job
+      name: Launch job template
+      action: rhaap:launch-job-template
       input:
-        switchType: ${{ parameters.switchType }}
-        modelNumber: ${{ parameters.modelNumber }}
-        stackConfiguration: ${{ parameters.stackConfiguration }}
-        ipAddress: ${{ parameters.ipAddress }}
-        defaultGateway: ${{ parameters.defaultGateway }}
-        vlanNumber: ${{ parameters.vlanNumber }}
-        emailResult: ${{ parameters.emailResult }}
-        emailRecipients: ${{ parameters.emailRecipients }}
-    - id: initiate-build
-      name: Initiate Switch Build
-      action: custom:initiate-build
-      input:
-        switchType: ${{ parameters.switchType }}
-        modelNumber: ${{ parameters.modelNumber }}
-        stackConfiguration: ${{ parameters.stackConfiguration }}
-        ipAddress: ${{ parameters.ipAddress }}
-        defaultGateway: ${{ parameters.defaultGateway }}
-        vlanNumber: ${{ parameters.vlanNumber }}
-        emailResult: ${{ parameters.emailResult }}
-        emailRecipients: ${{ parameters.emailRecipients }}
+        token: ${{ parameters.token }}
+        values:
+          template: 
+            id: 20
+            name: 'NWAS Job Template'
+    # - id: validate-input
+    #   name: Validate Input
+    #   action: custom:validate-input
+    #   input:
+    #     switchType: ${{ parameters.switchType }}
+    #     modelNumber: ${{ parameters.modelNumber }}
+    #     stackConfiguration: ${{ parameters.stackConfiguration }}
+    #     ipAddress: ${{ parameters.ipAddress }}
+    #     defaultGateway: ${{ parameters.defaultGateway }}
+    #     vlanNumber: ${{ parameters.vlanNumber }}
+    #     emailResult: ${{ parameters.emailResult }}
+    #     emailRecipients: ${{ parameters.emailRecipients }}
+    # - id: initiate-build
+    #   name: Initiate Switch Build
+    #   action: custom:initiate-build
+    #   input:
+    #     switchType: ${{ parameters.switchType }}
+    #     modelNumber: ${{ parameters.modelNumber }}
+    #     stackConfiguration: ${{ parameters.stackConfiguration }}
+    #     ipAddress: ${{ parameters.ipAddress }}
+    #     defaultGateway: ${{ parameters.defaultGateway }}
+    #     vlanNumber: ${{ parameters.vlanNumber }}
+    #     emailResult: ${{ parameters.emailResult }}
+    #     emailRecipients: ${{ parameters.emailRecipients }}
   output:
     text:
       - title: 'Switch Build Completed Successfully'
