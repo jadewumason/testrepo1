@@ -99,20 +99,27 @@ spec:
           title: Email Result
           type: boolean
           description: Send the result of the upgrade via email
-      allOf:        
-        - if:
-            properties:
-              emailResult:
-                const: true
-          then:
-            properties:
-              emailRecipients:
-                title: Email Recipients
-                type: array
-                description: List of email addresses to receive the upgrade results
-                items:
-                  type: string
-                  format: email                  
+        emailRecipients:
+          title: Email Recipients
+          type: array
+          description: List of email addresses to receive the upgrade results
+          items:
+            type: string
+            format: email      
+      # allOf:        
+      #   - if:
+      #       properties:
+      #         emailResult:
+      #           const: true
+      #     then:
+      #       properties:
+      #         emailRecipients:
+      #           title: Email Recipients
+      #           type: array
+      #           description: List of email addresses to receive the upgrade results
+      #           items:
+      #             type: string
+      #             format: email                  
   steps:
     - id: validate-input
       name: Validate Input
