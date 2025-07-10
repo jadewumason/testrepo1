@@ -53,6 +53,17 @@ spec:
             - 4510
             - ISR
             - ASR
+        emailResult:
+          title: Email Result
+          type: boolean
+          description: Send the result of the upgrade via email
+        emailRecipients:
+          title: Email Recipients
+          type: array
+          description: List of email addresses to receive the upgrade results
+          items:
+            type: string
+            format: email
       allOf:
         - if:
             properties:
@@ -71,17 +82,7 @@ spec:
                 default: v1.0
             required:
               - version
-        emailResult:
-          title: Email Result
-          type: boolean
-          description: Send the result of the upgrade via email
-        emailRecipients:
-          title: Email Recipients
-          type: array
-          description: List of email addresses to receive the upgrade results
-          items:
-            type: string
-            format: email
+
   steps:
     - id: validate-input
       name: Validate Input
