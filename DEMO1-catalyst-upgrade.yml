@@ -55,12 +55,6 @@ spec:
             - '4510'
             - 'ISR'
             - 'ASR'
-        version:
-          title: OS Version
-          type: string
-          description: Select the OS version based on the device model
-          enum: []
-          default: ''
         emailResult:
           title: Email Result
           type: boolean
@@ -110,6 +104,34 @@ spec:
                 items:
                   type: string
                   format: email
+    - title: Email Notification
+      description: Provide details for the email notification
+      ui:order:
+        - emailResult
+        - emailRecipients
+      required:
+        - emailResult
+      type: object
+      properties:       
+        emailResult:
+          title: Email Result
+          type: boolean
+          description: Send the result of the upgrade via email
+      allOf:
+        
+        - if:
+            properties:
+              emailResult:
+                const: true
+          then:
+            properties:
+              emailRecipients:
+                title: Email Recipients
+                type: array
+                description: List of email addresses to receive the upgrade results
+                items:
+                  type: string
+                  format: email                  
   steps:
     - id: validate-input
       name: Validate Input
